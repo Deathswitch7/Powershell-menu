@@ -1,0 +1,68 @@
+using namespace System.Management.Automation.Host
+
+
+function New-Menu {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [string]$Title,
+
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [string]$Question
+    )
+}do {
+        
+    $Chocolate = [ChoiceDescription]::new('&Chocolate', 'Favorite flavour: Chocolate')
+    $Straberry = [ChoiceDescription]::new('&Strawberry', 'Favorite flavour: Strawberry')
+    $Vanilla = [ChoiceDescription]::new('&Vanilla', 'Favorite flavour: Vanilla')
+    $NewRecipie = [ChoiceDescription]::new('&NewRecipie', 'Zubair New recipie: NewRecipie')
+    $exit = [ChoiceDescription]::new('&exit', 'exit the menue: exit')
+
+    $options = [ChoiceDescription[]]($Chocolate, $Straberry, $Vanilla, $NewRecipie, $exit)
+    $Title='Donought Recipie'
+     $Question='Which recipie do you want to choose?'
+ 
+
+    $result = $host.ui.PromptForChoice($Title, $Question, $options, 0)
+
+    switch ($result) {
+        0 { $page = Invoke-WebRequest -Uri "https://food.ndtv.com/recipe-chocolate-doughnut-954099"
+        $recipie=$page.parsedHtml.GetElementsByTagName("div") | where-object { $_.className -eq "RcHTM_ul"}
+        
+        foreach($procedure in $recipie)
+        {
+        Write-Host $procedure.innerText
+        }
+         }
+        1 { $page6 = Invoke-WebRequest -Uri "https://www.oprah.com/food/strawberry-buttermilk-baked-doughnuts-recipe-healthy-donut-recipes"
+        $recipie6=$page6.parsedHtml.GetElementsByTagName("div") | where-object { $_.className -eq "article__content article-text-content"}
+       
+        
+        foreach($procedure6 in $recipie6)
+        {
+        Write-Host $procedure6.innerText
+        }
+         }
+        2 { $page0 = Invoke-WebRequest -Uri "https://www.thesemisweetsisters.com/2021/09/08/baked-vanilla-cake-donuts-glazed/"
+        $recipie0=$page0.parsedHtml.GetElementsByTagName("li") | where-object { $_.className -eq "instruction"}
+        
+        
+        
+        
+        foreach($procedure0 in $recipie0)
+        {
+        Write-Host $procedure0.innerText
+        }
+        }
+        3 { Get-ChildItem 
+        Invoke-Item  Donut3.HTML }
+
+    }
+Pause
+
+}
+until ($result -eq '4')
+
+
